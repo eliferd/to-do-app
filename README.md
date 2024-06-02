@@ -1,2 +1,2 @@
 # to-do-app
-To-Do App est un projet réalisé en C# et Angular de gestion de tâche à planifier.
+To-Do App is a todo-list project made in C# & Angular.
