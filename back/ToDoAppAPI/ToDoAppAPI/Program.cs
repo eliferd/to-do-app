@@ -1,6 +1,7 @@
 
-using Microsoft.EntityFrameworkCore;
-using ToDoAppAPI.Database;
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ToDoAppAPI.Helpers;
 
 namespace ToDoAppAPI
 {
@@ -10,12 +11,12 @@ namespace ToDoAppAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
-            //builder.Services.AddAuthentication();
 
             var app = builder.Build();
 

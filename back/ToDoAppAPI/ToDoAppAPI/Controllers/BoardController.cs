@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ToDoAppAPI.Database;
 using ToDoAppAPI.Models;
 using ToDoAppAPI.Repositories.Boards;
@@ -28,6 +29,7 @@ namespace ToDoAppAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public void RegisterBoard([FromBody] Board board)
         {
             this._boardRepository.InsertBoard(board);
@@ -35,6 +37,7 @@ namespace ToDoAppAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public void UpdateBoard([FromBody] Board board, [FromRoute] Guid id)
         {
             this._boardRepository.UpdateBoard(board);
@@ -42,6 +45,7 @@ namespace ToDoAppAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public void DeleteBoard(Guid id)
         {
             this._boardRepository.DeleteBoard(id);

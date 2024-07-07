@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ToDoAppAPI.Database;
 using ToDoAppAPI.Repositories.Tasks;
 using Task = ToDoAppAPI.Models.Task;
@@ -28,6 +29,7 @@ namespace ToDoAppAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public void RegisterTask([FromBody] Task task)
         {
             this._taskRepository.InsertTask(task);
@@ -35,6 +37,7 @@ namespace ToDoAppAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public void UpdateTask([FromBody] Task task, [FromRoute] Guid id) 
         {
             this._taskRepository.UpdateTask(task);
@@ -42,6 +45,7 @@ namespace ToDoAppAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public void DeleteTask(Guid id)
         {
             this._taskRepository.DeleteTask(id);

@@ -2,7 +2,7 @@
 using ToDoAppAPI.Database;
 using ToDoAppAPI.Models;
 using ToDoAppAPI.Repositories;
-using ToDoAppAPI.Repositories.Status;
+using ToDoAppAPI.Repositories.Statuses;
 
 namespace ToDoAppAPI.Controllers
 {

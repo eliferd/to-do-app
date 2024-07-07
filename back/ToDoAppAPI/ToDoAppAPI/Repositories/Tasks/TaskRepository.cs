@@ -57,7 +57,7 @@ namespace ToDoAppAPI.Repositories.Tasks
 
         public void InsertTask(Task task)
         {
-            throw new NotImplementedException();
+            _dbCtx.Tasks.Add(task);
         }
 
         public void Save()
