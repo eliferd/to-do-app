@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using System.Text;
 using ToDoAppAPI.Database;
 using ToDoAppAPI.Models;
 
@@ -9,6 +8,7 @@ namespace ToDoAppAPI.Repositories.Users
     {
         private DatabaseContext _dbCtx;
         private bool disposed = false;
+        private int hashIterations = 5000;
 
         public UserRepository(DatabaseContext dbCtx)
         {
@@ -45,16 +45,16 @@ namespace ToDoAppAPI.Repositories.Users
 
         public User? GetUser(string username, string password)
         {
-            User? user = _dbCtx.Users.Find(username);
+            User? user = _dbCtx.Users.Where(x => x.Username == username).Select(usr => usr).FirstOrDefault();
 
             if (user == null)
             {
                 return null;
             }
 
-            byte[] inputPassword = Rfc2898DeriveBytes.Pbkdf2(Encoding.UTF8.GetBytes(password), Encoding.UTF8.GetBytes(user.PasswordSalt), 5000, HashAlgorithmName.SHA512, 256);
-
-            if (Encoding.UTF8.GetString(inputPassword) == user.Password)
+            byte[] inputPassword = Rfc2898DeriveBytes.Pbkdf2(password, Convert.FromBase64String(user.PasswordSalt), this.hashIterations, HashAlgorithmName.SHA512, 256);
+            string convertedPassword = Convert.ToBase64String(inputPassword);
+            if (string.Equals(convertedPassword, user.Password))
             {
                 return user;
             } else
@@ -75,10 +75,12 @@ namespace ToDoAppAPI.Repositories.Users
 
             rand.NextBytes(salt);
 
-            user.PasswordSalt = Encoding.UTF8.GetString(salt);
+            user.PasswordSalt = Convert.ToBase64String(salt);
 
-            user.Password = Encoding.UTF8.GetString(Rfc2898DeriveBytes.Pbkdf2(Encoding.UTF8.GetBytes(user.Password), salt, 5000, HashAlgorithmName.SHA512, 256));
+            user.Password = Convert.ToBase64String(Rfc2898DeriveBytes.Pbkdf2(user.Password, Convert.FromBase64String(user.PasswordSalt), this.hashIterations, HashAlgorithmName.SHA512, 256));
             _dbCtx.Users.Add(user);
+
+            _dbCtx.SaveChanges();
         }
 
         public void Save()

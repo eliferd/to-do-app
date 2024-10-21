@@ -34,12 +34,12 @@ namespace ToDoAppAPI.Database
         {
             modelBuilder.Entity<Status>().Property<string>("Label").HasColumnType("varchar(20)");
             modelBuilder.Entity<Status>().Property<string>("Code").HasColumnType("varchar(10)");
-            modelBuilder.Entity<Status>().HasData(new Status[]
-            {
+            modelBuilder.Entity<Status>().HasData(
+            [
                 new Status { Id = 1, Code = "TODO", Label = "To-Do"},
                 new Status { Id = 2, Code = "PROGRESS", Label = "In Progress"},
                 new Status { Id = 3, Code = "DONE", Label = "Done"},
-            });
+            ]);
 
             modelBuilder.Entity<Board>().HasMany(b => b.Tasks).WithOne(t => t.Board).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Board>().HasOne(b => b.Author);
