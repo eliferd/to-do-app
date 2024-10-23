@@ -52,15 +52,10 @@ namespace ToDoAppAPI.Repositories.Users
                 return null;
             }
 
-            byte[] inputPassword = Rfc2898DeriveBytes.Pbkdf2(password, Convert.FromBase64String(user.PasswordSalt), this.hashIterations, HashAlgorithmName.SHA512, 256);
+            byte[] inputPassword = Rfc2898DeriveBytes.Pbkdf2(password, Convert.FromBase64String(user.PasswordSalt), this.hashIterations, HashAlgorithmName.SHA512, 128);
             string convertedPassword = Convert.ToBase64String(inputPassword);
-            if (string.Equals(convertedPassword, user.Password))
-            {
-                return user;
-            } else
-            {
-                throw new InvalidDataException("Invalid password.");
-            }
+
+            return string.Equals(convertedPassword, user.Password) ? user : null;
         }
 
         public User? GetUser(Guid userId)
@@ -77,7 +72,7 @@ namespace ToDoAppAPI.Repositories.Users
 
             user.PasswordSalt = Convert.ToBase64String(salt);
 
-            user.Password = Convert.ToBase64String(Rfc2898DeriveBytes.Pbkdf2(user.Password, Convert.FromBase64String(user.PasswordSalt), this.hashIterations, HashAlgorithmName.SHA512, 256));
+            user.Password = Convert.ToBase64String(Rfc2898DeriveBytes.Pbkdf2(user.Password, Convert.FromBase64String(user.PasswordSalt), this.hashIterations, HashAlgorithmName.SHA512, 128));
             _dbCtx.Users.Add(user);
 
             _dbCtx.SaveChanges();
